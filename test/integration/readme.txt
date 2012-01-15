@@ -1,0 +1,1 @@
+This file is created for placeholder of empty directory, can be safely deleted.

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn"
+	id="definitions" targetNamespace="http://activiti.org/bpmn20">
+	<process id="vacationRequest" name="Vacation Request">
+		<startEvent id="start" />
+		<sequenceFlow id="flow0" targetRef="initiateVacationRequest"
+			sourceRef="start" />
+		<userTask id="initiateVacationRequest" activiti:formKey="/vacationRequest/create"
+			name="Initiate Vacation Request">
+			<documentation>Vacation request by ${username}</documentation>
+			<potentialOwner>
+				<resourceAssignmentExpression>
+					<formalExpression>ROLE_USER</formalExpression>
+				</resourceAssignmentExpression>
+			</potentialOwner>
+		</userTask>
+		<sequenceFlow id="flow1" targetRef="handleVacationRequest"
+			sourceRef="initiateVacationRequest" />
+		<userTask id="handleVacationRequest" activiti:formKey="/vacationRequest/approval"
+			name="Handle Vacation Request">
+			<documentation>Vacation request by ${username}</documentation>
+			<potentialOwner>
+				<resourceAssignmentExpression>
+					<formalExpression>ROLE_MANAGER</formalExpression>
+				</resourceAssignmentExpression>
+			</potentialOwner>
+		</userTask>
+		<sequenceFlow id="flow2" targetRef="requestApproved"
+			sourceRef="handleVacationRequest" />
+		<exclusiveGateway id="requestApproved" name="Request Approved?" />
+		<sequenceFlow id="flow3" targetRef="sendConfirmationE-mail"
+			sourceRef="requestApproved">
+			<conditionExpression xsi:type="tFormalExpression">${vacationApproved}</conditionExpression>
+		</sequenceFlow>
+		<serviceTask id="sendConfirmationE-mail" name="Send Confirmation E-mail"
+			activiti:type="mail">
+			<extensionElements>
+				<activiti:field expression="${from}" name="from" />
+				<activiti:field expression="${emailTo}" name="to" />
+				<activiti:field stringValue="Your Vacation Request has been approved." name="subject" />
+				<activiti:field name="text">
+					<activiti:expression>${approvalRemark}</activiti:expression>
+				</activiti:field>
+			</extensionElements>
+		</serviceTask>
+		<sequenceFlow id="flow4" targetRef="end0"
+			sourceRef="sendConfirmationE-mail" />
+		<endEvent id="end0" />
+		<sequenceFlow id="flow5" targetRef="adjustVacationRequest"
+			sourceRef="requestApproved">
+			<conditionExpression xsi:type="tFormalExpression">${!vacationApproved}</conditionExpression>
+		</sequenceFlow>
+		<userTask id="adjustVacationRequest" activiti:formKey="/vacationRequest/edit"
+			name="Adjust Vacation Request">
+			<documentation>Your manager has not approved your vacation request.
+			</documentation>
+			<humanPerformer>
+				<resourceAssignmentExpression>
+					<formalExpression>${username}</formalExpression>
+				</resourceAssignmentExpression>
+			</humanPerformer>
+		</userTask>
+		<sequenceFlow id="flow6" targetRef="resendRequest"
+			sourceRef="adjustVacationRequest" />
+		<exclusiveGateway id="resendRequest" name="Resend Request?" />
+		<sequenceFlow id="flow7" targetRef="handleVacationRequest"
+			sourceRef="resendRequest">
+			<conditionExpression xsi:type="tFormalExpression">${resendRequest}</conditionExpression>
+		</sequenceFlow>
+		<sequenceFlow id="flow8" sourceRef="resendRequest"
+			targetRef="end1">
+			<conditionExpression xsi:type="tFormalExpression">${!resendRequest}</conditionExpression>
+		</sequenceFlow>
+		<endEvent id="end1" />
+	</process>
+</definitions>
+
+  
