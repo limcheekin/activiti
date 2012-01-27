@@ -21,6 +21,7 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.codehaus.groovy.grails.commons.ControllerArtefactHandler
 import org.springframework.core.io.Resource 
 import org.grails.activiti.ActivitiConstants
+import org.grails.activiti.serializable.SerializableVariableType
 
 /**
  *
@@ -86,6 +87,9 @@ class ActivitiGrailsPlugin {
 		            mailServerDefaultFrom = CH.config.activiti.mailServerDefaultFrom?:ActivitiConstants.DEFAULT_MAIL_SERVER_FROM
 		            dataSource = ref("dataSource")
 		            transactionManager = ref("transactionManager")
+
+                    // Define custom serializable types for fix issue with serialization
+                    customPreVariableTypes = [new SerializableVariableType()]
 		        }
 				
 				  processEngine(org.activiti.spring.ProcessEngineFactoryBean) {
