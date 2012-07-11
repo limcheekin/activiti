@@ -18,8 +18,11 @@
  * @since 5.0.beta2
  */
  --%>
-<span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
-<span class="menuButton"><g:link class="list" action="myTaskList"><g:message code="myTasks.label" default="My Tasks ({0})" args="[myTasksCount]" /></g:link></span>
-<span class="menuButton"><g:link class="list" action="unassignedTaskList"><g:message code="unassignedTasks.label" default="Unassigned Tasks ({0})" args="[unassignedTasksCount]" /></g:link></span>
-<span class="menuButton"><g:link class="list" action="allTaskList"><g:message code="allTasks.label" default="All Tasks ({0})" args="[allTasksCount]" /></g:link></span>
-
+<div class="nav" role="navigation">
+ <ul>    			
+  <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
+  <li><g:link class="list" action="myTaskList"><g:message code="myTasks.label" default="My Tasks ({0})" args="[myTasksCount]" /></g:link></li>
+  <li><g:link class="list" action="unassignedTaskList"><g:message code="unassignedTasks.label" default="Unassigned Tasks ({0})" args="[unassignedTasksCount]" /></g:link></li>
+  <li><g:link class="list" action="allTaskList"><g:message code="allTasks.label" default="All Tasks ({0})" args="[allTasksCount]" /></g:link></li>
+ </ul>
+</div>

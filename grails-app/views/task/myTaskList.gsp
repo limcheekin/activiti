@@ -32,9 +32,7 @@
         <title><g:message code="myTasks.title" default="My Tasks of {0}" args="[session[sessionUsernameKey]]"/></title>
     </head>
     <body>
-        <div class="nav">
-    			<g:render template="navigation" />
-    		</div>
+        <g:render template="navigation" />
         <div class="body">
             <h1><g:message code="myTasks.title" default="My Tasks of {0}" args="[session[sessionUsernameKey]]"/></h1>
             <g:if test="${flash.message}">

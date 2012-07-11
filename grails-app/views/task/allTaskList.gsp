@@ -36,9 +36,7 @@
         </script>
     </head>
     <body>
-        <div class="nav">
-    			<g:render template="navigation" />
-    		</div>
+   			<g:render template="navigation" />
         <div class="body">
             <h1><g:message code="allTasks.title" default="All Tasks"/></h1>
             <g:if test="${flash.message}">
