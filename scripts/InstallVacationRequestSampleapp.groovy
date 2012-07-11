@@ -26,38 +26,16 @@ packageName = ''
 vacationRequestDir="${activitiPluginDir}/src/sample-app/vacation-request"
 
 target(install: "Install Vacation Request Sample Application") {	
-		ant.input(message:"Do you want to use Spring Security for identity service?",validargs:"y,n", addproperty:"enabledSpringSecurity")
-		enabledSpringSecurity = ant.antProject.properties["enabledSpringSecurity"] == 'y'
-		
-		if (enabledSpringSecurity) {
-			ant.input(message:"Enter package name for User and Role domain classes:", addproperty:"packageName")
-			packageName = ant.antProject.properties["packageName"]
-			installPluginForName "activiti-spring-security"
-			resolveDependencies()
-		}
-		
-		if (enabledSpringSecurity) {
-			ant.copy (todir:"${basedir}/grails-app/conf", overwrite: true) {
-				fileset dir:"${vacationRequestDir}/grails-app/conf/springSecurity"
-			}
-			if (packageName) {
-			  ant.replaceregexp match:"@import@", replace:"import ${packageName}.*", flags:"g", byline:"true", file:"${basedir}/grails-app/conf/VacationRequestBootStrap.groovy"
-			}
-		} else {
-			ant.copy (todir:"${basedir}/grails-app/conf", overwrite: true) {
-				fileset dir:"${vacationRequestDir}/grails-app/conf/standard"
-			}
-		}
+	 if (getPluginDirForName('spring-security-core')) {
+		 installSpringSecurityCoreFiles()
+	 } else {
+	   installStandardConfigFiles()
+	 }
 		ant.copy (todir:"${basedir}/grails-app/controllers", overwrite: true) {
 			fileset dir:"${vacationRequestDir}/grails-app/controllers"
 		}		
 		ant.copy (todir:"${basedir}/grails-app/domain", overwrite: true) {
 			fileset dir:"${vacationRequestDir}/grails-app/domain/standard"
-		}
-		if (enabledSpringSecurity) {
-			copyControllersAndViews()
-			makeUserAndRoleDomainClasses()
-			updateConfig()
 		}
 		ant.copy (todir:"${basedir}/grails-app/views", overwrite: true) {
 			fileset dir:"${vacationRequestDir}/grails-app/views"
@@ -65,6 +43,27 @@ target(install: "Install Vacation Request Sample Application") {
 		ant.copy (todir:"${basedir}/src/groovy", overwrite: true) {
 			fileset dir:"${vacationRequestDir}/src/groovy"
 		}
+}
+
+private installStandardConfigFiles() {
+	ant.copy (todir:"${basedir}/grails-app/conf", overwrite: true) {
+		fileset dir:"${vacationRequestDir}/grails-app/conf/standard"
+	}
+}
+
+private installSpringSecurityCoreFiles() {
+	ant.input(message:"Enter package name for User and Role domain classes:", addproperty:"packageName")
+	packageName = ant.antProject.properties["packageName"]
+	
+	ant.copy (todir:"${basedir}/grails-app/conf", overwrite: true) {
+		fileset dir:"${vacationRequestDir}/grails-app/conf/springSecurity"
+	}
+	if (packageName) {
+	  ant.replaceregexp match:"@import@", replace:"import ${packageName}.*", flags:"g", byline:"true", file:"${basedir}/grails-app/conf/VacationRequestBootStrap.groovy"
+	}
+	copyControllersAndViews()
+	makeUserAndRoleDomainClasses()
+	updateConfig()
 }
 
 private makeUserAndRoleDomainClasses() {
