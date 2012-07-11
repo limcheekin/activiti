@@ -29,13 +29,11 @@ target(main: "Install plugin's index.gsp, logo, favicon and default H2 DataSourc
 	  ant.move file:"${basedir}/grails-app/views/index.gsp", tofile:"${basedir}/grails-app/views/index.bak"
 	ant.move file:"${basedir}/web-app/images/grails_logo.png", tofile:"${basedir}/web-app/images/grails_logo.png.bak"
 	ant.move file:"${basedir}/web-app/images/favicon.ico", tofile:"${basedir}/web-app/images/favicon.ico.bak"
-	ant.move file:"${basedir}/grails-app/conf/DataSource.groovy", tofile:"${basedir}/grails-app/conf/DataSource.bak"
 	
 	// Copy plugin related files
 	ant.copy file:"${activitiPluginDir}/grails-app/views/index.gsp", todir:"${basedir}/grails-app/views", overwrite: true
 	ant.copy file:"${activitiPluginDir}/web-app/images/grails_activiti_logo.png", tofile:"${basedir}/web-app/images/grails_logo.png", overwrite: true
 	ant.copy file:"${activitiPluginDir}/web-app/images/grails_activiti_favicon.ico", tofile:"${basedir}/web-app/images/favicon.ico", overwrite: true
-	ant.copy file:"${activitiPluginDir}/src/activiti-quickstart/DataSource.groovy", todir:"${basedir}/grails-app/conf", overwrite: true
 }
 
 setDefaultTarget(main)
