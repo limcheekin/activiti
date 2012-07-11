@@ -13,6 +13,7 @@ grails.project.dependency.resolution = {
         grailsPlugins()
         grailsHome()
         grailsCentral()
+		    mavenRepo name: "Activiti", root: "http://maven.alfresco.com/nexus/content/groups/public"
 
         // uncomment the below to enable remote dependency resolution
         // from public Maven repositories
@@ -27,5 +28,12 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         // runtime 'mysql:mysql-connector-java:5.1.5'
+		compile ('org.activiti:activiti-engine:5.9') {
+			excludes 'livetribe-jsr223'
+		}
+		runtime 'org.activiti:activiti-spring:5.9'
+		runtime 'javax.mail:mail:1.4.1'
+		test 'org.subethamail:subethasmtp-smtp:1.2'
+		test 'org.subethamail:subethasmtp-wiser:1.2'
     }
 }
