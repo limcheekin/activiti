@@ -23,7 +23,10 @@
 
 includeTargets << grailsScript("Init")
 
-target(main: "Install plugin's index.gsp, logo, favicon and default H2 DataSource.grooy") {
+target(main: "Install Activiti taskforms directory, configurations, index.gsp, logo and favicon") {
+	event('StatusFinal', ['Initializing Activiti ...'])
+	ant.mkdir(dir:"${basedir}/src/taskforms")
+	updateConfig()
 	// Backup existing files
 	if (new File("${basedir}/grails-app/views/index.gsp").exists())
 	  ant.move file:"${basedir}/grails-app/views/index.gsp", tofile:"${basedir}/grails-app/views/index.bak"
@@ -34,6 +37,63 @@ target(main: "Install plugin's index.gsp, logo, favicon and default H2 DataSourc
 	ant.copy file:"${activitiPluginDir}/grails-app/views/index.gsp", todir:"${basedir}/grails-app/views", overwrite: true
 	ant.copy file:"${activitiPluginDir}/web-app/images/grails_activiti_logo.png", tofile:"${basedir}/web-app/images/grails_logo.png", overwrite: true
 	ant.copy file:"${activitiPluginDir}/web-app/images/grails_activiti_favicon.ico", tofile:"${basedir}/web-app/images/favicon.ico", overwrite: true
+	event('StatusFinal', ['... finished initializing Activiti.'])
 }
 
+private void updateConfig() {
+	def configFile = new File(basedir, 'grails-app/conf/Config.groovy')
+	if (configFile.exists() && configFile.text.indexOf("activiti") == -1) {
+		configFile.withWriterAppend {
+			it.writeLine '\n// Added by the Grails Activiti plugin:'
+			it.writeLine '''activiti {
+	processEngineName = "activiti-engine-default"
+	  databaseType = "h2"
+	  deploymentName = appName
+	  deploymentResources = ["file:./grails-app/conf/**/*.bpmn*.xml",
+							 "file:./grails-app/conf/**/*.png",
+							 "file:./src/taskforms/**/*.form"]
+	  jobExecutorActivate = false
+	  mailServerHost = "smtp.yourserver.com"
+	  mailServerPort = "25"
+	  mailServerUsername = ""
+	  mailServerPassword = ""
+	  mailServerDefaultFrom = "username@yourserver.com"
+	  history = "audit" // "none", "activity", "audit" or "full"
+	  sessionUsernameKey = "username"
+	  useFormKey = true
+}
+
+environments {
+	development {
+		activiti {
+			  processEngineName = "activiti-engine-dev"
+			  databaseSchemaUpdate = true // true, false or "create-drop"
+		}
+	}
+	test {
+		activiti {
+			  processEngineName = "activiti-engine-test"
+			  databaseSchemaUpdate = true
+		  mailServerPort = "5025"
+		}
+	}
+	production {
+		activiti {
+			  processEngineName = "activiti-engine-prod"
+			  databaseSchemaUpdate = false
+			  jobExecutorActivate = true
+		}
+	}
+}
+'''
+
+println '''
+************************************************************
+* Your grails-app/conf/Config.groovy has been updated with *
+* default configurations of Activiti.                      *
+************************************************************
+'''
+		}
+	}
+}
 setDefaultTarget(main)
