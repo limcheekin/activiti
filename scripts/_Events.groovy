@@ -94,22 +94,7 @@ private void createActivitiConfigFile(String activitiConfigFilePath, boolean isT
 </beans>	
 """
 	}
-	ant.echo "Content of generated ${activitiConfigFile.absolutePath} file:"
+	println "Content of generated ${activitiConfigFile.absolutePath} file:"
   println activitiConfigFile.text
 }	
 
-eventCreateWarStart = {warname, stagingDir ->
-  if (grailsEnv == "production") {
-      ant.echo "Remove unnecessary JAR files..."
-	  ["subethasmtp-smtp-1.2.jar", 
-		  "subethasmtp-wiser-1.2.jar", 
-		  "antlr-2.7.7.jar",
-		  "geronimo-jta_1.1_spec-1.1.1.jar",
-		  "mockito-core-1.8.2.jar",
-		  "objenesis-1.0.jar",
-		  "persistence-api-1.0.jar"
-		 ].each { jar ->
-      ant.delete file:"${stagingDir}/WEB-INF/lib/$jar"
-      }
-    }
-}
