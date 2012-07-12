@@ -13,7 +13,7 @@ grails.project.dependency.resolution = {
         grailsPlugins()
         grailsHome()
         grailsCentral()
-		    mavenRepo name: "Activiti", root: "http://maven.alfresco.com/nexus/content/groups/public"
+		    mavenRepo name: "Activiti", root: "https://maven.alfresco.com/nexus/content/groups/public"
 
         // uncomment the below to enable remote dependency resolution
         // from public Maven repositories
@@ -36,4 +36,7 @@ grails.project.dependency.resolution = {
 		test 'org.subethamail:subethasmtp-smtp:1.2'
 		test 'org.subethamail:subethasmtp-wiser:1.2'
     }
+	plugins {
+		build ":release:2.0.3"
+	}
 }
