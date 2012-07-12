@@ -27,8 +27,8 @@ target(main: "Copy Activiti examples to test/unit directory") {
 		ant.copy (todir:"${basedir}/test/unit", overwrite: true) {
 			fileset dir:"${activitiPluginDir}/src/activiti-examples"
 		}							
-		println "Activiti examples installed successfully."					
-		println "You can run the installed examples with 'grails test-app -unit'."					
+		event('StatusFinal', ['Activiti examples installed successfully.'])					
+		event('StatusFinal', ['You can run the installed examples with "grails test-app -unit".'])					
 }
 
 setDefaultTarget(main)

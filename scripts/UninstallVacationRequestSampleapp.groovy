@@ -30,6 +30,7 @@ target(uninstall: "Uninstall Vacation Request Sample Application") {
 		ant.delete dir:"${basedir}/grails-app/domain/${vacationRequestDir}"
 		ant.delete dir:"${basedir}/grails-app/views/${vacationRequestDir}"
 		ant.delete dir:"${basedir}/src/groovy/${vacationRequestDir}"
+		event("StatusUpdate", ["Vacation Request Sample Application uninstalled."])
 }
 
 setDefaultTarget(uninstall)

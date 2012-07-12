@@ -70,7 +70,7 @@ class ActivitiGrailsPlugin {
 		  def disabledActiviti = System.getProperty("disabledActiviti")
 		  
 		  if (!disabledActiviti && !CH.config.activiti.disabled) {
-		    	println "Activiti Process Engine Initialization..."	
+		    	println "Configuring Activiti Process Engine ..."	
 				
 		    	processEngineConfiguration(org.activiti.spring.SpringProcessEngineConfiguration) {
 		            processEngineName = CH.config.activiti.processEngineName?:ActivitiConstants.DEFAULT_PROCESS_ENGINE_NAME
@@ -110,6 +110,8 @@ class ActivitiGrailsPlugin {
 		            identityService = ref("identityService")
 		            formService = ref("formService")
 		        }
+			  
+				println "... finished configuring Activiti Process Engine."
 		  }
     }
 

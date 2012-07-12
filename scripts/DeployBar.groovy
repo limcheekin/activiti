@@ -1,4 +1,4 @@
-/* Copyright 2010 the original author or authors.
+/* Copyright 2010-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,11 +58,11 @@ target(createBar: "Create Activiti Business Archive (BAR) that contains process 
 	if (deploymentResources) {
 		deploymentResources = [deploymentResources].flatten()
 	} else {
-	  ant.echo "deploymentResources not configured. Use ActivitiConstants.DEFAULT_DEPLOYMENT_RESOURCES..."
+	  event('StatusFinal', ['deploymentResources not configured. Use ActivitiConstants.DEFAULT_DEPLOYMENT_RESOURCES...'])
 	  ActivitiConstants = classLoader.loadClass("org.grails.activiti.ActivitiConstants")
 	  deploymentResources = ActivitiConstants.DEFAULT_DEPLOYMENT_RESOURCES
 	}
-	ant.echo "deploymentResources = $deploymentResources"
+	event('StatusUpdate', ["deploymentResources = $deploymentResources"])
 	resolver = new PathMatchingResourcePatternResolver()
 	deploymentResources.each { resource ->
 	    resources = resolver.getResources(resource)  

@@ -43,6 +43,7 @@ target(install: "Install Vacation Request Sample Application") {
 		ant.copy (todir:"${basedir}/src/groovy", overwrite: true) {
 			fileset dir:"${vacationRequestDir}/src/groovy"
 		}
+		event("StatusUpdate", [ "Vacation Request Sample Application installed."])
 }
 
 private installStandardConfigFiles() {
