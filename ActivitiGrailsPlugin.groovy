@@ -49,7 +49,8 @@ class ActivitiGrailsPlugin {
  With the Grails Activiti Plugin, workflow application can be created at your fingertips! 
 
  Project Site and Documentation: http://code.google.com/p/grails-activiti-plugin/
- Support: http://code.google.com/p/grails-activiti-plugin/issues/list
+ Source Code: https://github.com/limcheekin/activiti
+ Support: https://github.com/limcheekin/activiti/issues
  Discussion Forum: http://groups.google.com/group/grails-activiti-plugin
 '''
 
