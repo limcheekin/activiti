@@ -53,8 +53,7 @@ private installStandardConfigFiles() {
 }
 
 private installSpringSecurityCoreFiles() {
-	ant.input(message:"Enter package name for User and Role domain classes:", addproperty:"packageName")
-	packageName = ant.antProject.properties["packageName"]
+	packageName = grailsConsole.userInput("Enter package name for User and Role domain classes:")
 	
 	ant.copy (todir:"${basedir}/grails-app/conf", overwrite: true) {
 		fileset dir:"${vacationRequestDir}/grails-app/conf/springSecurity"
