@@ -28,10 +28,10 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         // runtime 'mysql:mysql-connector-java:5.1.5'
-		compile ('org.activiti:activiti-engine:5.9') {
+		compile ('org.activiti:activiti-engine:5.12') {
 			excludes 'livetribe-jsr223'
 		}
-		runtime 'org.activiti:activiti-spring:5.9'
+		runtime 'org.activiti:activiti-spring:5.12'
 		runtime 'javax.mail:mail:1.4.1'
 		test 'org.subethamail:subethasmtp-smtp:1.2'
 		test 'org.subethamail:subethasmtp-wiser:1.2'

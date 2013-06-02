@@ -1,12 +1,13 @@
 package org.grails.activiti.serializable
 
 import org.activiti.engine.ActivitiException
+import org.activiti.engine.impl.bpmn.data.ItemInstance
+import org.activiti.engine.impl.bpmn.webservice.MessageInstance
+import org.activiti.engine.impl.context.Context
 import org.activiti.engine.impl.persistence.entity.VariableInstanceEntity
+import org.activiti.engine.impl.util.IoUtil
 import org.activiti.engine.impl.variable.ByteArrayType
 import org.activiti.engine.impl.variable.ValueFields
-import org.activiti.engine.impl.util.IoUtil
-import org.activiti.engine.impl.context.Context
-import org.grails.activiti.serializable.GroovyObjectInputStream
 
 /**
  *
@@ -78,9 +79,29 @@ class SerializableVariableType extends ByteArrayType {
         return baos.toByteArray()
     }
 
-    boolean isAbleToStore(Object value) {
-        return value instanceof Serializable;
-    }
+	boolean isAbleToStore(Object value) {
+		if (value==null) {
+			return false;
+		}
+		Class theclass = value.getClass();
+		boolean isAssignable = (
+				byte[].class.isAssignableFrom(theclass)
+				|| String.class.isAssignableFrom(value.getClass())
+				|| Boolean.class.isAssignableFrom(value.getClass())
+				|| boolean.class.isAssignableFrom(value.getClass())
+				|| Short.class.isAssignableFrom(value.getClass())
+				|| short.class.isAssignableFrom(value.getClass())
+				|| Integer.class.isAssignableFrom(value.getClass())
+				|| int.class.isAssignableFrom(value.getClass())
+				|| Long.class.isAssignableFrom(value.getClass())
+				|| long.class.isAssignableFrom(value.getClass())
+				|| Date.class.isAssignableFrom(value.getClass())
+				|| Double.class.isAssignableFrom(value.getClass())
+				|| ItemInstance.class.isAssignableFrom(theclass)
+				|| MessageInstance.class.isAssignableFrom(theclass)
+				);
+		return (!isAssignable && value instanceof Serializable);
+	}
 }
 
 
