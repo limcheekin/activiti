@@ -31,7 +31,7 @@ import org.grails.activiti.serializable.SerializableVariableType
  */
 class ActivitiGrailsPlugin {
     // the plugin version
-    def version = "5.12"
+    def version = "5.12.1"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "2.0.0 > *"
     // the other plugins this plugin depends on
@@ -56,8 +56,13 @@ class ActivitiGrailsPlugin {
 
     // URL to the plugin's documentation
     def documentation = "http://grails.org/plugin/activiti"
-	  def confWatchedResources = [CH.config.activiti.deploymentResources, "file:./grails-app/controllers/**/*.groovy"].flatten()
-	  def defaultWatchedResources = [ActivitiConstants.DEFAULT_DEPLOYMENT_RESOURCES, "file:./grails-app/controllers/**/*.groovy"].flatten()
+
+    def license = "APACHE"
+    def issueManagement = [system: 'GitHub', url: 'https://github.com/limcheekin/activiti/issues']
+    def scm = [url: 'https://github.com/limcheekin/activiti'] 
+
+	def confWatchedResources = [CH.config.activiti.deploymentResources, "file:./grails-app/controllers/**/*.groovy"].flatten()
+	def defaultWatchedResources = [ActivitiConstants.DEFAULT_DEPLOYMENT_RESOURCES, "file:./grails-app/controllers/**/*.groovy"].flatten()
     def watchedResources = confWatchedResources?:defaultWatchedResources
 	  
     String sessionUsernameKey = CH.config.activiti.sessionUsernameKey?:ActivitiConstants.DEFAULT_SESSION_USERNAME_KEY
