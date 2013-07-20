@@ -19,6 +19,7 @@ import grails.util.GrailsNameUtils
 import grails.util.Environment
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.codehaus.groovy.grails.commons.ControllerArtefactHandler
+import org.grails.activiti.task.GlobalUserTaskEventListener
 import org.springframework.core.io.Resource 
 import org.grails.activiti.ActivitiConstants
 import org.grails.activiti.serializable.SerializableVariableType
@@ -73,10 +74,62 @@ class ActivitiGrailsPlugin {
     }
 
     def doWithSpring = {
+        def activitiListenersRef = { listenersName ->
+            def listeners = []
+            if (listenersName) {
+                def listenersNameList = []
+                if (listenersName instanceof String)
+                    listenersNameList << listenersName
+                else if (listenersName instanceof List)
+                    listenersNameList = listenersName
+                else
+                    throw new RuntimeException('activiti.preParseListenersName参数必须是字符串或List')
+
+                listenersNameList.each {
+                    listeners << ref(it)
+                }
+            }
+
+            return listeners
+        }
+        def isUsedGlobalUserTaskEventListener = false
+            
 		  def disabledActiviti = System.getProperty("disabledActiviti")
 		  
 		  if (!disabledActiviti && !CH.config.activiti.disabled) {
 		    	println "Configuring Activiti Process Engine ..."	
+          
+                //dynamic define user task event litener listeners:
+                /**
+                 * 1. define user task event litener beans name in grails app conf/config.groovy:
+                 *      globalCreateTaskListenersName = ["myCreateTaskListener1", "myCreateTaskListener2"]
+                 *      globalAssignmentTaskListenersName = ["myAssignmentTaskListener1", "myAssignmentTaskListener2"]
+                 *      globalCompleteTaskListenersName = ["myCompleteTaskListener1", "myCompleteTaskListener2"]
+                 *
+                 * 2.define user task event litener beans in grails app conf/spring/resources.groovy
+                 *      myCreateTaskListener1(MyCreateTaskListener1)
+                 *      myCreateTaskListener2(MyCreateTaskListener2)
+                 *      myAssignmentTaskListener1(MyAssignmentTaskListener1Service)
+                 *      ...
+                 */
+                globalUserTaskEventListener(GlobalUserTaskEventListener) {
+                    def listeners = []
+                    listeners = activitiListenersRef(application.config.activiti.globalCreateTaskListenersName)
+                    if (listeners) {
+                        createTaskListeners = listeners
+                        isUsedGlobalUserTaskEventListener = true
+                    }
+                    listeners = activitiListenersRef(application.config.activiti.globalAssignmentTaskListenersName)
+                    if (listeners) {
+                        assignmentTaskListeners = listeners
+                        isUsedGlobalUserTaskEventListener = true
+                    }
+                    listeners = activitiListenersRef(application.config.activiti.globalCompleteTaskListenersName)
+                    if (listeners) {
+                        completeTaskListeners = listeners
+                        isUsedGlobalUserTaskEventListener = true
+                    }
+                }          
 				
 		    	processEngineConfiguration(org.activiti.spring.SpringProcessEngineConfiguration) {
 		            processEngineName = CH.config.activiti.processEngineName?:ActivitiConstants.DEFAULT_PROCESS_ENGINE_NAME
@@ -96,6 +149,22 @@ class ActivitiGrailsPlugin {
 
                     // Define custom serializable types for fix issue with serialization
                     customPreVariableTypes = [new SerializableVariableType()]
+                    
+                    //dynamic define pre. BPMN parse litener listeners:
+                    /**
+                     * 1. define BPMN parse. litener beans name in grails app conf/config.groovy:
+                     *      preParseBpmnListenersName = ["preParseBpmnListener1", "preParseBpmnListener3", "preParseBpmnListener2"]
+                     *
+                     * 2.define BPMN parse litener beans in grails app conf/spring/resources.groovy
+                     *      preParseBpmnListener1(MyPreParseBpmnListener1)
+                     *      preParseBpmnListener2(MyPreParseBpmnListener1)
+                     *      preParseBpmnListener3(MyPreParseBpmnListener1)
+                     */
+                    def listeners = activitiListenersRef(application.config.activiti.preParseBpmnListenersName)
+                    if (isUsedGlobalUserTaskEventListener)
+                        listeners << ref('globalUserTaskEventListener')
+                    if (listeners)
+                        preParseListeners = listeners                    
 		        }
 				
 				  processEngine(org.activiti.spring.ProcessEngineFactoryBean) {
