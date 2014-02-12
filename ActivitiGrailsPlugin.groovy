@@ -36,6 +36,8 @@ class ActivitiGrailsPlugin {
     def grailsVersion = "2.0.0 > *"
     // the other plugins this plugin depends on
     def dependsOn = [:]
+    // load after hibernate and gorm if present
+    def loadAfter = [ 'hibernate', 'gorm' ]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
             "grails-app/views/error.gsp"
