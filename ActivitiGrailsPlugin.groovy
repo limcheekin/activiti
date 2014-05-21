@@ -37,7 +37,7 @@ class ActivitiGrailsPlugin {
     // the other plugins this plugin depends on
     def dependsOn = [:]
     // load after hibernate and gorm if present
-    def loadAfter = [ 'hibernate', 'gorm' ]
+    def loadAfter = [ 'hibernate', 'hibernate4', 'gorm' ]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
             "grails-app/views/error.gsp"
